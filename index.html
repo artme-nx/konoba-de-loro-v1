@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konoba De Loro — Otok Pašman, Zadar</title>
+  <meta name="description" content="Konoba De Loro na otoku Pašmanu — svježa riba s gradela, domaće vino, pašmanska tradicija. Rezervirajte stol: +385 23 260 064.">
+  <meta name="theme-color" content="#1C1814">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- Lenis -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --bg-base: #F2EDE3;
+  --bg-dark: #1C1814;
+  --bg-dark-2: #231E19;
+  --text: #2E2A24;
+  --accent: #C07848;
+  --accent-soft: #D4926A;
+  --olive: #687455;
+  --mid: #9E8E7A;
+  --cream-dim: rgba(242,237,227,0.72);
+  --line-dark: rgba(242,237,227,0.12);
+  --line-light: rgba(46,42,36,0.16);
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================================================
+   TYPOGRAPHY SCALE
+   ============================================================ */
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.eyebrow--light {
+  color: var(--accent-soft);
+}
+
+.eyebrow--mid {
+  color: var(--mid);
+}
+
+h1, .h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6.5vw, 88px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+h2, .h2 {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 64px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+h3, .h3 {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.lead {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 30px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.body-text {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--mid);
+  max-width: 52ch;
+}
+
+.body-text--light {
+  color: rgba(242,237,227,0.65);
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 64px);
+}
+
+.section-pad {
+  padding: clamp(80px, 10vw, 140px) 0;
+}
+
+.text-center { text-align: center; }
+.italic { font-style: italic; }
+
+/* reveal animation class */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+/* ============================================================
+   STICKY HEADER
+   ============================================================ */
+#site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  padding: 0 clamp(20px, 4vw, 56px);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.4s var(--ease-out), border-bottom 0.4s var(--ease-out), height 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+#site-header.scrolled {
+  background: var(--bg-dark);
+  border-bottom-color: var(--line-dark);
+  height: 64px;
+}
+
+/* Logo */
+.header-logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+  color: #F2EDE3;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.header-logo em {
+  font-style: italic;
+  color: var(--accent-soft);
+}
+
+/* Desktop Nav */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 3vw, 44px);
+  list-style: none;
+}
+
+.header-nav a {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(242,237,227,0.72);
+  transition: color 0.25s;
+  position: relative;
+}
+
+.header-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent-soft);
+  transition: width 0.3s var(--ease-out);
+}
+
+.header-nav a:hover {
+  color: #F2EDE3;
+}
+
+.header-nav a:hover::after {
+  width: 100%;
+}
+
+/* CTA Button */
+.btn-reserve {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bg-dark);
+  background: var(--accent);
+  padding: 11px 22px;
+  border-radius: 2px;
+  transition: background 0.25s, color 0.25s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-reserve:hover {
+  background: var(--accent-soft);
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 6px;
+  background: none;
+  border: none;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: #F2EDE3;
+  transition: transform 0.35s var(--ease-out), opacity 0.25s;
+  transform-origin: center;
+}
+
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile Overlay Menu */
+#mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-dark);
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+#mobile-menu.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobile-nav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.mobile-nav a {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 7vw, 44px);
+  font-weight: 400;
+  color: rgba(242,237,227,0.85);
+  transition: color 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.mobile-nav a:hover {
+  color: var(--accent-soft);
+}
+
+.mobile-menu-cta {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bg-dark);
+  background: var(--accent);
+  padding: 14px 36px;
+  border-radius: 2px;
+}
+
+.mobile-menu-divider {
+  width: 1px;
+  height: 48px;
+  background: var(--line-dark);
+  margin-bottom: 48px;
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+#hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transform-origin: center center;
+}
+
+.hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(28,24,20,0.55) 0%,
+    rgba(28,24,20,0.35) 40%,
+    rgba(28,24,20,0.65) 70%,
+    rgba(28,24,20,0.82) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 clamp(20px, 5vw, 80px);
+  max-width: 900px;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin-bottom: 28px;
+  opacity: 0;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 6vw, 80px);
+  font-weight: 500;
+  font-style: italic;
+  color: #F2EDE3;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+}
+
+.hero-title .word {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.hero-title .word-inner {
+  display: inline-block;
+}
+
+.hero-sub {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.8vw, 20px);
+  font-weight: 400;
+  color: rgba(242,237,227,0.72);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  margin-bottom: 0;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+}
+
+.scroll-indicator span {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(242,237,227,0.45);
+}
+
+.scroll-line {
+  width: 1px;
+  height: 44px;
+  background: var(--line-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-soft);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0% { top: -100%; }
+  100% { top: 100%; }
+}
+
+/* ============================================================
+   ORNAMENT DIVIDER
+   ============================================================ */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: clamp(32px, 4vw, 52px) auto;
+  max-width: 360px;
+}
+
+.ornament-line {
+  flex: 1;
+  height: 1px;
+}
+
+.ornament-line--dark { background: var(--line-dark); }
+.ornament-line--light { background: var(--line-light); }
+
+.ornament-svg {
+  flex-shrink: 0;
+  opacity: 0.55;
+}
+
+/* ============================================================
+   SECTION: O NAMA
+   ============================================================ */
+#o-nama {
+  background: var(--bg-dark);
+  color: #F2EDE3;
+}
+
+.o-nama-inner {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.o-nama-lead {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.5vw, 44px);
+  font-weight: 400;
+  font-style: italic;
+  color: #F2EDE3;
+  line-height: 1.25;
+  margin-bottom: 32px;
+  letter-spacing: -0.01em;
+}
+
+.o-nama-body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(242,237,227,0.62);
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   SECTION: JELOVNIK
+   ============================================================ */
+#jelovnik {
+  background: var(--bg-base);
+  position: relative;
+}
+
+.jelovnik-header {
+  text-align: center;
+  margin-bottom: clamp(48px, 6vw, 72px);
+}
+
+.jelovnik-header h2 {
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.jelovnik-sub {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: var(--mid);
+}
+
+/* Decorative background element */
+.jelovnik-bg-deco {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 340px;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.06;
+}
+
+.jelovnik-bg-deco img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(1) contrast(1.2);
+}
+
+.jelovnik-content {
+  position: relative;
+  z-index: 1;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 3vw, 48px) clamp(32px, 5vw, 72px);
+}
+
+.menu-section {
+  padding-bottom: clamp(24px, 3vw, 36px);
+  border-bottom: 1px solid var(--line-light);
+}
+
+.menu-section:nth-last-child(-n+2) {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.menu-section-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-light);
+}
+
+.menu-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.menu-item-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.6;
+}
+
+.menu-item-name {
+  font-family: var(--font-display);
+  font-size: clamp(15px, 1.5vw, 18px);
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.menu-note {
+  margin-top: clamp(36px, 4vw, 52px);
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--mid);
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 32px;
+  border-top: 1px solid var(--line-light);
+}
+
+/* ============================================================
+   SECTION: OTOK PAŠMAN
+   ============================================================ */
+#pasman {
+  background: var(--bg-dark-2);
+  color: #F2EDE3;
+  overflow: hidden;
+}
+
+.pasman-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  min-height: 600px;
+}
+
+.pasman-media {
+  position: relative;
+  overflow: hidden;
+}
+
+.pasman-media-img {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.pasman-text {
+  padding: clamp(60px, 8vw, 100px) clamp(40px, 6vw, 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pasman-text .eyebrow {
+  margin-bottom: 20px;
+}
+
+.pasman-text h2 {
+  color: #F2EDE3;
+  margin-bottom: 28px;
+}
+
+.pasman-body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(242,237,227,0.6);
+  margin-bottom: 44px;
+  max-width: 48ch;
+}
+
+.pasman-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-top: 1px solid var(--line-dark);
+  padding-top: 32px;
+}
+
+.pasman-fact {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.fact-value {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 500;
+  color: var(--accent-soft);
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.fact-label {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(242,237,227,0.5);
+  letter-spacing: 0.08em;
+}
+
+/* ============================================================
+   SECTION: GALERIJA
+   ============================================================ */
+#galerija {
+  background: var(--bg-base);
+}
+
+.galerija-header {
+  text-align: center;
+  margin-bottom: clamp(40px, 5vw, 60px);
+}
+
+.galerija-header h2 {
+  color: var(--text);
+}
+
+/* Gallery grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: auto;
+  gap: 10px;
+}
+
+.gallery-item {
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: sepia(0.25) contrast(1.05) saturate(0.9);
+  transition: transform 0.6s var(--ease-out), filter 0.4s;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+  filter: sepia(0.08) contrast(1.05) saturate(1.0);
+}
+
+/* Grid placement: 6-column layout */
+.gallery-item:nth-child(1) {
+  grid-column: span 4;
+  grid-row: span 1;
+  aspect-ratio: 900 / 600;
+}
+
+.gallery-item:nth-child(2) {
+  grid-column: span 2;
+  grid-row: span 1;
+  aspect-ratio: 600 / 600;
+}
+
+.gallery-item:nth-child(3) {
+  grid-column: span 2;
+  grid-row: span 1;
+  aspect-ratio: 600 / 600;
+}
+
+.gallery-item:nth-child(4) {
+  grid-column: span 2;
+  grid-row: span 2;
+  aspect-ratio: 600 / 800;
+}
+
+.gallery-item:nth-child(5) {
+  grid-column: span 2;
+  grid-row: span 1;
+  aspect-ratio: 600 / 600;
+}
+
+.gallery-item:nth-child(6) {
+  grid-column: span 4;
+  grid-row: span 1;
+  aspect-ratio: 900 / 600;
+}
+
+/* ============================================================
+   SECTION: REZERVACIJE
+   ============================================================ */
+#rezervacije {
+  background: var(--bg-base);
+  border-top: 1px solid var(--line-light);
+}
+
+.rezervacije-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
+}
+
+.rez-col .eyebrow {
+  margin-bottom: 20px;
+}
+
+.rez-col h2 {
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.rez-col h2 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.rez-invite {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--mid);
+  margin-bottom: 36px;
+  max-width: 44ch;
+}
+
+.rez-phone-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3.5vw, 42px);
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1;
+  transition: color 0.2s;
+  margin-bottom: 16px;
+}
+
+.rez-phone-link:hover {
+  color: var(--accent);
+}
+
+.rez-phone-arrow {
+  font-size: 0.7em;
+  color: var(--accent);
+}
+
+.rez-season-note {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--mid);
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-light);
+}
+
+/* Hours card */
+.hours-card {
+  background: var(--bg-dark);
+  border-radius: 4px;
+  padding: clamp(28px, 4vw, 44px);
+}
+
+.hours-card-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.hours-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.hours-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.hours-day {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(242,237,227,0.55);
+  letter-spacing: 0.04em;
+}
+
+.hours-time {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(242,237,227,0.88);
+}
+
+.hours-note {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(242,237,227,0.38);
+  line-height: 1.6;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-dark);
+}
+
+/* ============================================================
+   SECTION: LOKACIJA
+   ============================================================ */
+#lokacija {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 520px;
+}
+
+.lokacija-text-panel {
+  background: var(--bg-dark-2);
+  padding: clamp(60px, 8vw, 100px) clamp(40px, 6vw, 72px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lokacija-text-panel .eyebrow {
+  margin-bottom: 20px;
+}
+
+.lokacija-text-panel h2 {
+  color: #F2EDE3;
+  margin-bottom: 24px;
+}
+
+.lokacija-body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(242,237,227,0.58);
+  margin-bottom: 28px;
+  max-width: 44ch;
+}
+
+.lokacija-address {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(15px, 1.6vw, 19px);
+  color: rgba(242,237,227,0.75);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.lokacija-phone {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 400;
+  color: var(--accent-soft);
+  transition: color 0.2s;
+}
+
+.lokacija-phone:hover {
+  color: #F2EDE3;
+}
+
+.lokacija-map {
+  position: relative;
+  overflow: hidden;
+}
+
+.lokacija-map iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  border: none;
+  display: block;
+  filter: grayscale(0.3) sepia(0.12);
+}
+
+/* ============================================================
+   SECTION: FOOTER
+   ============================================================ */
+#footer {
+  background: var(--bg-dark);
+  border-top: 1px solid var(--line-dark);
+  padding: clamp(64px, 8vw, 100px) 0 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  padding-bottom: clamp(48px, 6vw, 72px);
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: #F2EDE3;
+  margin-bottom: 8px;
+}
+
+.footer-brand-name em {
+  font-style: italic;
+  color: var(--accent-soft);
+}
+
+.footer-tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 14px;
+  color: rgba(242,237,227,0.45);
+  margin-bottom: 20px;
+}
+
+.footer-brand-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(242,237,227,0.38);
+  max-width: 36ch;
+}
+
+.footer-col-title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.footer-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.footer-nav-list a {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(242,237,227,0.5);
+  transition: color 0.2s;
+}
+
+.footer-nav-list a:hover {
+  color: rgba(242,237,227,0.9);
+}
+
+.footer-hours-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.footer-hours-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.footer-hours-day {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(242,237,227,0.38);
+}
+
+.footer-hours-time {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(242,237,227,0.6);
+}
+
+.footer-region {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(242,237,227,0.3);
+  margin-top: 20px;
+  letter-spacing: 0.06em;
+}
+
+.footer-bottom {
+  padding: 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-copy {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(242,237,227,0.28);
+  letter-spacing: 0.04em;
+}
+
+.footer-bottom-right {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(242,237,227,0.28);
+  letter-spacing: 0.04em;
+}
+
+/* ============================================================
+   MOBILE STICKY BAR
+   ============================================================ */
+#mobile-sticky {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 800;
+  background: var(--bg-dark);
+  border-top: 1px solid var(--line-dark);
+  padding: 14px clamp(20px, 4vw, 32px);
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.mobile-sticky-label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(242,237,227,0.6);
+}
+
+.mobile-sticky-cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent);
+  color: var(--bg-dark);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 12px 20px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   RESPONSIVE — ≤900px: hamburger, ≤768px: single col
+   ============================================================ */
+@media (max-width: 900px) {
+  .header-nav,
+  .btn-reserve {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  #mobile-sticky {
+    display: flex;
+  }
+
+  body {
+    padding-bottom: 68px; /* account for sticky bar */
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .menu-section:nth-last-child(-n+2) {
+    border-bottom: 1px solid var(--line-light);
+    padding-bottom: clamp(24px, 3vw, 36px);
+  }
+
+  .menu-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .pasman-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .pasman-media {
+    min-height: 340px;
+  }
+
+  .pasman-media-img {
+    min-height: 340px;
+  }
+
+  .pasman-text {
+    padding: 48px clamp(20px, 5vw, 40px);
+  }
+
+  .pasman-body {
+    max-width: none;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gallery-item:nth-child(1) { grid-column: span 2; aspect-ratio: 4/3; }
+  .gallery-item:nth-child(2) { grid-column: span 1; aspect-ratio: 1; }
+  .gallery-item:nth-child(3) { grid-column: span 1; aspect-ratio: 1; }
+  .gallery-item:nth-child(4) { grid-column: span 1; aspect-ratio: 3/4; grid-row: span 1; }
+  .gallery-item:nth-child(5) { grid-column: span 1; aspect-ratio: 1; }
+  .gallery-item:nth-child(6) { grid-column: span 2; aspect-ratio: 4/3; }
+
+  .rezervacije-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  #lokacija {
+    grid-template-columns: 1fr;
+  }
+
+  .lokacija-map iframe {
+    min-height: 300px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pasman-facts {
+    gap: 16px;
+  }
+
+  .hero-title {
+    font-size: clamp(30px, 9vw, 52px);
+  }
+}
+
+/* ============================================================
+   PREFERS-REDUCED-MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hero-bg img { transform: none !important; }
+  .pasman-media-img { transform: none !important; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ============================================================
+     STICKY HEADER
+     ============================================================ -->
+<header id="site-header" role="banner">
+  <a href="#hero" class="header-logo" aria-label="Konoba De Loro — početna">
+    Konoba <em>De Loro</em>
+  </a>
+
+  <nav aria-label="Glavna navigacija">
+    <ul class="header-nav">
+      <li><a href="#o-nama">O nama</a></li>
+      <li><a href="#jelovnik">Jelovnik</a></li>
+      <li><a href="#pasman">Pašman</a></li>
+      <li><a href="#galerija">Galerija</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <a href="tel:+38523260064" class="btn-reserve" aria-label="Rezervirajte stol, telefon">
+    Rezerviraj stol
+  </a>
+
+  <button class="hamburger" id="hamburger-btn" aria-label="Otvori izbornik" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobilni izbornik">
+  <nav aria-label="Mobilna navigacija">
+    <ul class="mobile-nav">
+      <li><a href="#o-nama">O nama</a></li>
+      <li><a href="#jelovnik">Jelovnik</a></li>
+      <li><a href="#pasman">Pašman</a></li>
+      <li><a href="#galerija">Galerija</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+  </nav>
+  <div class="mobile-menu-divider" aria-hidden="true"></div>
+  <a href="tel:+38523260064" class="mobile-menu-cta">
+    Rezerviraj stol &rarr;
+  </a>
+</div>
+
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="hero" aria-label="Naslovnica">
+  <div class="hero-bg" id="hero-bg">
+    <img
+      src="https://loremflickr.com/1600/900/stone,tavern?lock=701"
+      alt="Unutrašnjost konobe, kameni zidovi i rustikalni stol"
+      fetchpriority="high"
+      decoding="async"
+    >
+  </div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow reveal" aria-label="Lokacija: Otok Pašman, Zadar">
+      OTOK PAŠMAN &nbsp;·&nbsp; ZADAR
+    </p>
+
+    <h1 class="hero-title" id="hero-title">
+      Svježa riba. Domaće vino. Pašmanski mir.
+    </h1>
+
+    <p class="hero-sub" id="hero-sub">
+      Konoba <em>De Loro</em> — gdje otočka tradicija sjeda za stol.
+    </p>
+  </div>
+
+  <div class="scroll-indicator" id="scroll-indicator" aria-hidden="true">
+    <span>Skrolaj</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     O NAMA
+     ============================================================ -->
+<section id="o-nama" class="section-pad" aria-labelledby="o-nama-heading">
+  <div class="container">
+    <div class="o-nama-inner">
+
+      <p class="eyebrow eyebrow--light reveal">Naša priča</p>
+
+      <div class="ornament reveal" aria-hidden="true">
+        <div class="ornament-line ornament-line--dark"></div>
+        <svg class="ornament-svg" width="28" height="14" viewBox="0 0 28 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 1C10 1 5 5 1 7C5 9 10 13 14 13C18 13 23 9 27 7C23 5 18 1 14 1Z" stroke="#C07848" stroke-width="0.8" fill="none"/>
+          <circle cx="14" cy="7" r="1.5" fill="#C07848"/>
+        </svg>
+        <div class="ornament-line ornament-line--dark"></div>
+      </div>
+
+      <h2 id="o-nama-heading" class="o-nama-lead reveal">
+        Otok Pašman daje — more, masline, mir.
+      </h2>
+
+      <p class="o-nama-body reveal">
+        Na zelenom otoku Pašmanu, okruženi maslinicima i bisernim morem
+        Kornatskog kanala, Konoba De Loro čuva ono što je uvijek bilo
+        najvrednije — iskonsku vezu između mora i stola. Obiteljska konoba
+        u kojoj se ribe hvata jutros a kuha podne. Vino je lokalno,
+        maslinom drenirani zrak je slan, a tempo je onaj koji samo otočani
+        razumiju. Bez žurbe. Uz svaki obrok — priča.
+      </p>
+
+      <div class="ornament reveal" aria-hidden="true" style="margin-top: clamp(32px, 4vw, 52px);">
+        <div class="ornament-line ornament-line--dark"></div>
+        <svg class="ornament-svg" width="32" height="10" viewBox="0 0 32 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="5" x2="13" y2="5" stroke="#687455" stroke-width="0.7"/>
+          <circle cx="16" cy="5" r="2" stroke="#C07848" stroke-width="0.8" fill="none"/>
+          <line x1="19" y1="5" x2="32" y2="5" stroke="#687455" stroke-width="0.7"/>
+        </svg>
+        <div class="ornament-line ornament-line--dark"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     JELOVNIK
+     ============================================================ -->
+<section id="jelovnik" class="section-pad" aria-labelledby="jelovnik-heading">
+
+  <div class="jelovnik-bg-deco" aria-hidden="true">
+    <img
+      src="https://loremflickr.com/1200/700/olive,grove?lock=703"
+      alt=""
+      loading="lazy"
+      decoding="async"
+    >
+  </div>
+
+  <div class="container jelovnik-content">
+
+    <header class="jelovnik-header">
+      <p class="eyebrow eyebrow--mid reveal">Jelovnik</p>
+      <h2 id="jelovnik-heading" class="reveal" style="color: var(--text);">Stol je spreman</h2>
+      <p class="jelovnik-sub reveal">Sve iz otočkog mora i sa dalmatinskog ognjišta.</p>
+    </header>
+
+    <div class="menu-grid" role="list" aria-label="Jelovnik konobe">
+
+      <!-- Morski početak -->
+      <div class="menu-section reveal" role="listitem">
+        <h3 class="menu-section-title">Morski početak</h3>
+        <ul class="menu-items">
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Dagnje na brujet</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Lignje na gradela</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Hobotnica u salati</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Crni rižoto</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Ribe s gradela -->
+      <div class="menu-section reveal" role="listitem">
+        <h3 class="menu-section-title">Ribe s gradela</h3>
+        <ul class="menu-items">
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Brancin s gradela</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Komarča</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Zubatac</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Špar s roštilja</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Ispod peke -->
+      <div class="menu-section reveal" role="listitem">
+        <h3 class="menu-section-title">Ispod peke</h3>
+        <ul class="menu-items">
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Janjetina ispod peke</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Janjetina s krumpirom</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Miješano meso ispod peke</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Domaće & Otočko -->
+      <div class="menu-section reveal" role="listitem">
+        <h3 class="menu-section-title">Domaće &amp; Otočko</h3>
+        <ul class="menu-items">
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Pašticada s njokima</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Brujet od ribe</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Domaći sir s maslinama</span>
+          </li>
+          <li class="menu-item">
+            <span class="menu-item-dot" aria-hidden="true"></span>
+            <span class="menu-item-name">Sezonska salata</span>
+          </li>
+        </ul>
+      </div>
+
+    </div><!-- /menu-grid -->
+
+    <p class="menu-note reveal">
+      Jelovnik se mijenja prema sezoni i ulovu. Pitajte za dnevnu ponudu.
+    </p>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     OTOK PAŠMAN
+     ============================================================ -->
+<section id="pasman" aria-labelledby="pasman-heading">
+  <div class="pasman-inner">
+
+    <!-- Left: image -->
+    <div class="pasman-media split-media">
+      <img
+        class="pasman-media-img"
+        src="https://loremflickr.com/800/1000/adriatic,island?lock=704"
+        alt="Pogled na jadranski otok Pašman iz mora"
+        loading="lazy"
+        decoding="async"
+      >
+    </div>
+
+    <!-- Right: text -->
+    <div class="pasman-text">
+      <p class="eyebrow eyebrow--light reveal">Otok Pašman</p>
+      <h2 id="pasman-heading" class="reveal">Tihi otok<br>na kraju horizonta</h2>
+
+      <p class="pasman-body reveal">
+        Pašman je zeleni otok — borovi i maslinici silaze do samoga mora.
+        Kristalno plavo i malo mrtve sezone. Spojen s Ugljanom mostom,
+        a trajektom dostupan iz Biograda na moru. Na uzvisini Ćokovac
+        čuva se benediktinski manastir Sv. Duje iz 12. stoljeća.
+        Duž pašmanskoga kanala plovi se prema Kornatima — nacionalnom
+        parku na dosegu jednog daha. Ovdje se ne žuri. Ni more ni konoba.
+      </p>
+
+      <div class="pasman-facts">
+        <div class="pasman-fact reveal">
+          <span class="fact-value">17 km²</span>
+          <span class="fact-label">površina otoka</span>
+        </div>
+        <div class="pasman-fact reveal">
+          <span class="fact-value">~800</span>
+          <span class="fact-label">otočana</span>
+        </div>
+        <div class="pasman-fact reveal">
+          <span class="fact-value">Kornati</span>
+          <span class="fact-label">nacionalni park u blizini</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     GALERIJA
+     ============================================================ -->
+<section id="galerija" class="section-pad" aria-labelledby="galerija-heading">
+  <div class="container">
+
+    <header class="galerija-header">
+      <p class="eyebrow eyebrow--mid reveal">Galerija</p>
+      <h2 id="galerija-heading" class="reveal">U konobinom zagrljaju</h2>
+    </header>
+
+    <div class="gallery-grid" role="list" aria-label="Galerija fotografija konobe">
+
+      <figure class="gallery-item reveal" role="listitem">
+        <img
+          src="https://loremflickr.com/900/600/grilled,fish?lock=705"
+          alt="Riba s gradela, svježi ulov"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+
+      <figure class="gallery-item reveal" role="listitem">
+        <img
+          src="https://loremflickr.com/600/600/konoba,rustic?lock=706"
+          alt="Rustikalni interijer konobe"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+
+      <figure class="gallery-item reveal" role="listitem">
+        <img
+          src="https://loremflickr.com/600/800/peka,lamb?lock=707"
+          alt="Janjetina ispod peke, dalmatinska tradicija"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+
+      <figure class="gallery-item reveal" role="listitem">
+        <img
+          src="https://loremflickr.com/600/600/stone,tavern?lock=708"
+          alt="Kameni zidovi i stol konobe"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+
+      <figure class="gallery-item reveal" role="listitem">
+        <img
+          src="https://loremflickr.com/600/600/pasman,island?lock=709"
+          alt="Otok Pašman viđen s mora"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+
+      <figure class="gallery-item reveal" role="listitem">
+        <img
+          src="https://loremflickr.com/900/600/adriatic,island?lock=710"
+          alt="Jadranski horizont, otočki krajobraz"
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     REZERVACIJE & RADNO VRIJEME
+     ============================================================ -->
+<section id="rezervacije" class="section-pad" aria-labelledby="rez-heading">
+  <div class="container">
+    <div class="rezervacije-inner">
+
+      <!-- Left: reservation info -->
+      <div class="rez-col">
+        <p class="eyebrow reveal">Rezervacije</p>
+
+        <h2 id="rez-heading" class="reveal">
+          Rezervirajte <em>vaš</em> stol
+        </h2>
+
+        <p class="rez-invite reveal">
+          Svaki stol u konobinom zagrljaju je priča za sebe. Nazovite nas i
+          rezervirajte — za dvoje, za obitelj, za poseban trenutak na Pašmanu.
+          Sezonski smo, zato je dobra ideja nazvati unaprijed.
+        </p>
+
+        <a href="tel:+38523260064" class="rez-phone-link reveal" aria-label="Pozovite nas: plus 385 23 260 064">
+          <span class="rez-phone-arrow" aria-hidden="true">&rarr;</span>
+          +385 23 260 064
+        </a>
+
+        <p class="rez-season-note reveal">
+          Sezonski objekt &middot; Otvoreni travanj &ndash; rujan
+        </p>
+      </div>
+
+      <!-- Right: hours card -->
+      <div class="rez-col reveal" aria-label="Radno vrijeme">
+        <div class="hours-card">
+          <p class="hours-card-title">Radno Vrijeme</p>
+          <ul class="hours-list">
+            <li class="hours-item">
+              <span class="hours-day">Pon &ndash; Pet</span>
+              <span class="hours-time">11:00 &ndash; 22:00</span>
+            </li>
+            <li class="hours-item">
+              <span class="hours-day">Sub &ndash; Ned</span>
+              <span class="hours-time">11:00 &ndash; 23:00</span>
+            </li>
+          </ul>
+          <p class="hours-note">
+            Zatvoreno u listopadu i studenom.<br>
+            Sezonski objekt, travanj &ndash; rujan.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     LOKACIJA
+     ============================================================ -->
+<section id="kontakt" aria-labelledby="lokacija-heading">
+  <div id="lokacija">
+
+    <!-- Left: text panel -->
+    <div class="lokacija-text-panel">
+      <p class="eyebrow eyebrow--light reveal">Gdje smo</p>
+
+      <h2 id="lokacija-heading" class="reveal">
+        Pronađite nas<br>na Pašmanu
+      </h2>
+
+      <p class="lokacija-body reveal">
+        Konoba De Loro smještena je u srcu otoka Pašmana, u blizini
+        trajektne luke u Tkonu. Dođite trajektom iz Biograda na moru
+        ili vlastitom plovilicom.
+      </p>
+
+      <address aria-label="Adresa konobe">
+        <p class="lokacija-address reveal">
+          Pašman, 23262 Pašman<br>
+          Hrvatska
+        </p>
+        <a href="tel:+38523260064" class="lokacija-phone reveal">
+          +385 23 260 064
+        </a>
+      </address>
+    </div>
+
+    <!-- Right: map -->
+    <div class="lokacija-map">
+      <iframe
+        src="https://maps.google.com/maps?q=Konoba+De+Loro+Pasman&output=embed"
+        title="Karta lokacije Konobe De Loro na otoku Pašmanu"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+        aria-label="Google karta — Konoba De Loro, Pašman"
+      ></iframe>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer id="footer" role="contentinfo">
+  <div class="container">
+
+    <div class="footer-grid">
+
+      <!-- Col 1: Brand -->
+      <div>
+        <p class="footer-brand-name">Konoba <em>De Loro</em></p>
+        <p class="footer-tagline">Otočka konoba od tradicije.</p>
+        <p class="footer-brand-body">
+          Svježa riba s gradela, janjetina ispod peke,
+          domaće vino i otočka tišina &mdash; sve što
+          Pašman može ponuditi stiže na vaš stol.
+          Dođite kakvi jeste. Odite siti i mirni.
+        </p>
+      </div>
+
+      <!-- Col 2: Navigation -->
+      <div>
+        <p class="footer-col-title">Navigacija</p>
+        <ul class="footer-nav-list">
+          <li><a href="#o-nama">O nama</a></li>
+          <li><a href="#jelovnik">Jelovnik</a></li>
+          <li><a href="#pasman">Otok Pašman</a></li>
+          <li><a href="#galerija">Galerija</a></li>
+          <li><a href="#rezervacije">Rezervacije</a></li>
+          <li><a href="#kontakt">Kontakt &amp; Lokacija</a></li>
+          <li><a href="tel:+38523260064">+385 23 260 064</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Hours + Region -->
+      <div>
+        <p class="footer-col-title">Radno Vrijeme</p>
+        <ul class="footer-hours-list">
+          <li class="footer-hours-item">
+            <span class="footer-hours-day">Pon &ndash; Pet</span>
+            <span class="footer-hours-time">11:00 – 22:00</span>
+          </li>
+          <li class="footer-hours-item">
+            <span class="footer-hours-day">Sub &ndash; Ned</span>
+            <span class="footer-hours-time">11:00 – 23:00</span>
+          </li>
+        </ul>
+        <p class="footer-region">
+          Zadar archipelago, Hrvatska
+        </p>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2024 Konoba De Loro &nbsp;&middot;&nbsp; Pašman, Hrvatska</p>
+      <p class="footer-bottom-right">Otok Pašman &nbsp;&middot;&nbsp; Zadar</p>
+    </div>
+
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     MOBILE STICKY RESERVE BAR
+     ============================================================ -->
+<div id="mobile-sticky" role="complementary" aria-label="Brza rezervacija">
+  <span class="mobile-sticky-label">Rezervirajte stol</span>
+  <a href="tel:+38523260064" class="mobile-sticky-cta" aria-label="Pozovite: plus 385 23 260 064">
+    +385 23 260 064
+  </a>
+</div>
+
+
+<!-- ============================================================
+     JAVASCRIPT — Lenis + GSAP
+     ============================================================ -->
+<script>
+(function () {
+  'use strict';
+
+  // ── prefers-reduced-motion check ─────────────────────────
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── GSAP plugin registration ──────────────────────────────
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── LENIS smooth scroll ──────────────────────────────────
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+    orientation: 'vertical',
+    smoothWheel: true
+  });
+
+  if (!prefersReduced) {
+    gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+    lenis.on('scroll', ScrollTrigger.update);
+  }
+
+  // ── Smooth anchor scroll ─────────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    anchor.addEventListener('click', function (e) {
+      var target = document.querySelector(this.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      lenis.scrollTo(target, { offset: -72, duration: 1.4 });
+
+      // Close mobile menu if open
+      closeMobileMenu();
+    });
+  });
+
+  // ── HEADER: transparent → solid on scroll ───────────────
+  var header = document.getElementById('site-header');
+
+  ScrollTrigger.create({
+    trigger: '#hero',
+    start: 'top top',
+    end: 'bottom top',
+    onLeave: function () { header.classList.add('scrolled'); },
+    onEnterBack: function () { header.classList.remove('scrolled'); }
+  });
+
+  // ── MOBILE MENU ──────────────────────────────────────────
+  var hamburger = document.getElementById('hamburger-btn');
+  var mobileMenu = document.getElementById('mobile-menu');
+  var isMenuOpen = false;
+
+  function openMobileMenu() {
+    isMenuOpen = true;
+    hamburger.classList.add('open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    mobileMenu.classList.add('open');
+    lenis.stop();
+  }
+
+  function closeMobileMenu() {
+    if (!isMenuOpen) return;
+    isMenuOpen = false;
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('open');
+    lenis.start();
+  }
+
+  hamburger.addEventListener('click', function () {
+    if (isMenuOpen) { closeMobileMenu(); } else { openMobileMenu(); }
+  });
+
+  // ESC key closes menu
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && isMenuOpen) { closeMobileMenu(); }
+  });
+
+  // ── HERO ANIMATIONS ──────────────────────────────────────
+  if (!prefersReduced) {
+
+    // 1. Hero bg breathing scale on load
+    var heroBg = document.getElementById('hero-bg');
+    gsap.fromTo(heroBg,
+      { scale: 1.0 },
+      { scale: 1.06, duration: 1.8, ease: 'power2.out', delay: 0.1 }
+    );
+
+    // 2. Hero bg gentle parallax on scroll
+    gsap.to(heroBg, {
+      yPercent: 18,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1.5
+      }
+    });
+
+    // 3. Hero eyebrow fade in
+    gsap.to('.hero-eyebrow', {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 0.2
+    });
+
+    // 4. H1 word-by-word reveal
+    var heroTitleEl = document.getElementById('hero-title');
+    var words = heroTitleEl.textContent.trim().split(/\s+/);
+    heroTitleEl.innerHTML = words.map(function (w) {
+      return '<span class="word"><span class="word-inner">' + w + '</span></span>';
+    }).join(' ');
+
+    gsap.from('#hero-title .word-inner', {
+      y: 30,
+      opacity: 0,
+      duration: 0.7,
+      stagger: 0.09,
+      ease: 'power3.out',
+      delay: 0.3
+    });
+
+    // 5. Hero sub-tagline
+    gsap.to('#hero-sub', {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 1.1
+    });
+
+    // 6. Scroll indicator
+    gsap.to('#scroll-indicator', {
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out',
+      delay: 1.6
+    });
+
+    // ── SECTION REVEALS (.reveal elements) ────────────────
+    gsap.utils.toArray('.reveal').forEach(function (el) {
+      // skip hero eyebrow (handled above)
+      if (el.classList.contains('hero-eyebrow')) return;
+
+      gsap.fromTo(el,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+            once: true
+          }
+        }
+      );
+    });
+
+    // ── PAŠMAN SPLIT IMAGE PARALLAX ───────────────────────
+    var splitImg = document.querySelector('.split-media img');
+    if (splitImg) {
+      gsap.to(splitImg, {
+        yPercent: 12,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.split-media',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1
+        }
+      });
+    }
+
+    // ── GALLERY STAGGER REVEAL ────────────────────────────
+    gsap.fromTo('.gallery-item',
+      { opacity: 0, y: 28, scale: 0.97 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.7,
+        ease: 'power3.out',
+        stagger: {
+          amount: 0.5,
+          from: 'start'
+        },
+        scrollTrigger: {
+          trigger: '.gallery-grid',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          once: true
+        }
+      }
+    );
+
+  } else {
+    // reduced motion: show everything instantly
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
+
+    document.querySelector('.hero-eyebrow').style.opacity = '1';
+    document.getElementById('hero-sub').style.opacity = '1';
+    document.getElementById('scroll-indicator').style.opacity = '1';
+  }
+
+  // ── ScrollTrigger refresh on window load ─────────────────
+  window.addEventListener('load', function () {
+    ScrollTrigger.refresh();
+  });
+
+}());
+</script>
+
+</body>
+</html>
